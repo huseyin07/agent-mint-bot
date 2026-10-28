@@ -21,7 +21,10 @@ export class Telegram {
       body: JSON.stringify(body),
       signal: AbortSignal.timeout(40_000),
     });
-    return res.json();
+    const j = await res.json().catch(() => ({ ok: false, description: `HTTP ${res.status}` }));
+    // Token asla loga yazılmaz; sadece Telegram'ın hata açıklaması.
+    if (!j.ok) throw new Error(`Telegram ${method}: ${j.error_code || res.status} ${j.description || ''}`.trim());
+    return j;
   }
 
   async send(text) {
@@ -42,6 +45,8 @@ export class Telegram {
 
   async pollForever() {
     if (!this.enabled) return;
+    const chatOk = /^-?\d+$/.test(this.chatId);
+    this.log.info(`telegram açık, chat id ${chatOk ? 'sayısal' : 'SAYI DEĞİL (hatalı olabilir)'}`);
     for (;;) {
       try {
         const r = await this.api('getUpdates', { offset: this.offset, timeout: 30, allowed_updates: ['message'] });

@@ -3,8 +3,12 @@
 
 export class Telegram {
   constructor(token, chatId, log = console) {
-    this.token = token;
-    this.chatId = String(chatId || '');
+    // Panelden kopyalarken kalan boşluk, tırnak ve "bot" önekini temizle.
+    this.token = String(token || '').trim().replace(/^["']|["']$/g, '').replace(/^bot(?=\d)/i, '').trim();
+    this.chatId = String(chatId || '').trim().replace(/^["']|["']$/g, '').trim();
+    if (this.token && !/^\d+:[A-Za-z0-9_-]{30,}$/.test(this.token)) {
+      log.error(`TELEGRAM_BOT_TOKEN biçimi hatalı görünüyor (uzunluk ${this.token.length}, ':' ${this.token.includes(':') ? 'var' : 'yok'}). BotFather'dan tekrar kopyala.`);
+    }
     this.log = log;
     this.offset = 0;
     this.handlers = new Map();

@@ -1,0 +1,19 @@
+{
+  "name": "agent-mint-bot",
+  "version": "0.1.0",
+  "description": "BSC üzerinde Agent ID'ye özel ücretsiz mint'leri zincirden yakalayıp, sabit güvenlik kurallarıyla Binance Agentic Wallet üzerinden mint eden bot.",
+  "type": "module",
+  "main": "src/index.js",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "check": "node src/cli-check.js",
+    "test": "node --test test/*.test.js"
+  },
+  "dependencies": {
+    "viem": "2.21.54"
+  },
+  "license": "MIT"
+}
